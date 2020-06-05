@@ -6,3 +6,5 @@ Julian Achatz
 Antoine Decrocq
 Samuel Fruchard
 Quentin Fustier
+
+Le projet a débuté le vendredi 5 juin 2020.
