@@ -1,26 +1,39 @@
 ﻿/* fond de page */
 body {
-  background-image: linear-gradient(0deg, slateblue, black, black);
   background-size: 100%;
   background-repeat: no-repeat;
   color: white;
-  height: 100vh;
-  margin: 0;
+  height: 90vh;
   /* pour éviter l'ascenseur */
-  border: 1px solid transparent;
+  /*border: 1px solid transparent;*/
   box-sizing: border-box;
+  margin: 20px;
+  /*padding: 10px;*/
+  border: 1px solid #666;
+  border-radius: 5px;
+  box-shadow: 3px 3px 3px #444;
+  background: linear-gradient(0deg, #ffa50040, orange);
 }
 
 /* bandeau de titre */
 h1 { 
-  color: white;
+  color: black;
   border: none;
   box-shadow: none;
   background-color: rgba(255,255,255,0.3);
   border-top: 3px solid rgba(255,255,255,0.6);
   border-bottom: 3px solid rgba(255,255,255,0.6);
+  /*text-shadow: 3px 3px 3px black;*/
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-bottom: 1.33em;
+}
+
+h2 {
+  color: black;
+  border: none;
+  box-shadow: none;
   margin-top: 1.33em;
-  text-shadow: 3px 3px 3px black;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   margin-bottom: 1.33em;
@@ -33,10 +46,24 @@ body > * {   padding-left: 10px; }
 body { font-family: Trebuchet MS, sans-serif; }
 
 /* positionnement des champs */
-label { display: block; }
-label span { display: inline-block; width: 5em; height: 1.5em; }
+label {
+  display: block;
+  color: black;
+  font-size: large;
+}
+label span { display: inline-block; width: 3em; height: 1.5em; }
+.label {
+  display: inline-block;
+  width : 7em;
+}
 
 a.delete:hover {
   color: red;
 }
-#map { height: 400px; width: 600px; }
+#map {
+  height: 85vh;
+  width: 70vw;
+  margin-top: 20px;
+  margin-right: 20px;
+  border: 1px solid #666;
+}

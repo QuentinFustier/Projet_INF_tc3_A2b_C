@@ -1,0 +1,2 @@
+- Rajouter les drapeaux
+- Faire bouger la carte et agrandir le marker quand on cherche un pays

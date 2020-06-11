@@ -71,7 +71,7 @@ function envoiformulaire(e) {
      // récupération des informations au format json
      if ( this.status == 200 ) {
        var data = JSON.parse(this.responseText);
-       window.error_msg.innerHTML = ''
+       window.error_msg.innerHTML = '';
        window.country_data.style.display = 'block';
        window.country_name.textContent = data.name;
        window.continent.textContent = data.continent;
