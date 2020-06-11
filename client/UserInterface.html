@@ -54,6 +54,15 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
      }).addTo(map);
 
+var greenIcon = L.icon({
+    iconUrl: 'images/marker-icon-green.png'
+});
+var normalIcon = L.icon({
+    iconUrl: 'images/marker-icon.png'
+});
+
+var marker_choisi = null;
+
 // Fonction appelée au chargement de la page
 function load_data () {
 
@@ -73,7 +82,7 @@ function load_data () {
       // attachement d'une popup, capture de l'événement 'clic'
       // ajout d'une propriété personnalisée au marqueur
       L.marker([data[n].lat,data[n].lon]).addTo(map)
-       .bindPopup('Lieu = '+data[n].name)
+       .bindPopup(data[n].name)
        .addEventListener('click',OnMarkerClick)
        .idnum = data[n].id;
     }
@@ -109,8 +118,12 @@ function OnMarkerClick (e) {
   xhr.open('GET','/description/'+idnum,true);
   xhr.send(); */
   var nom = e.target.getPopup().getContent();
-  nom = nom.substr(7);
   window.pays.value = nom;
+  e.target.setIcon(greenIcon);
+  if(marker_choisi != null){
+      marker_choisi.target.setIcon(normalIcon)
+  }
+  marker_choisi = e;
   envoiformulaire(e);
 }
 
