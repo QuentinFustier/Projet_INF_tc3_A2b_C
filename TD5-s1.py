@@ -317,5 +317,5 @@ conn = sqlite3.connect('pays.sqlite')
 # Pour accéder au résultat des requêtes sous forme d'un dictionnaire
 conn.row_factory = sqlite3.Row
 # instanciation et lancement du serveur
-httpd = socketserver.TCPServer(("", 8081), RequestHandler)
+httpd = socketserver.TCPServer(("", 8080), RequestHandler)
 httpd.serve_forever()
