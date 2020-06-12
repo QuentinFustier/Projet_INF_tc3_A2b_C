@@ -13,18 +13,21 @@
 
 <!-- div pour l'affichage des boutons et des informations -->
   <div style="float:left">
-    <h1>Les Pays de l'Europe</h1>
+    <h1>The countries of Europe</h1>
     <div>
-    <label><span>Pays :</span><input id="pays" name="pays"></label>
-      <label><span> </span> <button id="bouton">Fiche</button></label>
+    <label><span>Country:</span><input id="pays" name="pays"></label>
+      <label><span> </span> <button id="bouton">Show</button></label>
     </div>
-    <div id="country_data">
-        <h2 id="country_name"></h2>
-        <div><span class="label">Continent:</span><span class="value" id="continent"></span></div>
-        <div><span class="label">Capital:</span><span class="value" id="capital"></span></div>
-        <div><span class="label">Latitude:</span><span class="value" id="latitude"></span></div>
-        <div><span class="label">Longitude:</span><span class="value" id="longitude"></span></div>
-        <div><span class="label">Read more on:</span><a id="wp" href="">wikipedia</a></div>
+    <div id="country_data" style="max-width:25vw">
+      <h2 id="country_name"></h2>
+      <div>
+        <img id="drapeau" src="flags/Austria.png" alt="Flag of the country" style="height:10vh; width:10vw">
+      </div>
+      <div><span class="label">Continent:</span><span class="value" id="continent"></span></div>
+      <div><span class="label">Capital:</span><span class="value" id="capital"></span></div>
+      <div><span class="label">Latitude:</span><span class="value" id="latitude"></span></div>
+      <div><span class="label">Longitude:</span><span class="value" id="longitude"></span></div>
+      <div><span class="label">Read more on:</span><a id="wp" href="">wikipedia</a></div>
     </div>
     <div id="error_msg"></div>
   </div>
@@ -43,7 +46,7 @@
 
 <script>
 
-document.getElementById('bouton').addEventListener('click', envoiformulaire);
+document.getElementById('bouton').addEventListener('click', clickBouton);
 window.country_data.style.display = 'none';
 // Création d'une carte dans la balise div "map",
 // et position de la vue sur un point donné et un niveau de zoom
@@ -62,6 +65,7 @@ var normalIcon = L.icon({
 });
 
 var marker_choisi = null;
+var markers = {};
 
 // Fonction appelée au chargement de la page
 function load_data () {
@@ -81,10 +85,12 @@ function load_data () {
       // insertion d'un marqueur à la position du lieu,
       // attachement d'une popup, capture de l'événement 'clic'
       // ajout d'une propriété personnalisée au marqueur
-      L.marker([data[n].lat,data[n].lon]).addTo(map)
-       .bindPopup(data[n].name)
-       .addEventListener('click',OnMarkerClick)
-       .idnum = data[n].id;
+
+      var marker = L.marker([data[n].lat,data[n].lon],{title:data[n].name}).addTo(map);
+      marker.addEventListener('click',clickMarker);
+      marker.name = data[n].name;
+
+      markers[data[n].name] = marker;
     }
   };
 
@@ -94,38 +100,26 @@ function load_data () {
 }
 
 // Fonction appelée lors d'un clic sur un marqueur
-function OnMarkerClick (e) {
-  /*
-  // objet pour l'envoi d'une requête Ajax
-  var xhr = new XMLHttpRequest();
-
-  // fonction appelée lorsque la réponse à la requête (description d'un lieu insolite) sera arrivée
-  xhr.onload = function() {
-
-    // transformation des données renvoyées par le serveur
-    // responseText est du type string, data est un objet
-    var data = JSON.parse(this.responseText);
-
-    // affichage dans la zone 'description' du nom (reprise dans le popup)
-    // et de la description récupérée par l'appel au serveur
-    description.innerHTML =  '<b><i>' + e.target.getPopup().getContent() + '</i></b><br>'+ data.desc;
-  };
-
-  // Le numéro du lieu est récupéré via la propriété personnalisée du marqueur
-  var idnum = e.target.idnum
-
-  // Envoi de la requête Ajax pour la récupération de la description du lieu de numéro idnum
-  xhr.open('GET','/description/'+idnum,true);
-  xhr.send(); */
-  var nom = e.target.getPopup().getContent();
-  window.pays.value = nom;
-  e.target.setIcon(greenIcon);
-  if(marker_choisi != null){
-      marker_choisi.target.setIcon(normalIcon)
-  }
-  marker_choisi = e;
+function clickMarker (e) {
+  window.pays.value = e.target.name;
   envoiformulaire(e);
 }
+
+
+function clickBouton(e) {
+    envoiformulaire(e);
+}
+
+function updateMap(name, lat, long) {
+    //changer la couleur des markers, centrer la carte sur la capitale et faire un zoom
+  if(marker_choisi != null){
+      marker_choisi.setIcon(normalIcon)
+  }
+  marker_choisi = markers[name].setIcon(greenIcon);
+  marker_choisi.setIcon(greenIcon);
+  map.setView([lat,long], 6);
+}
+
 
 function envoiformulaire(e) {
    var xhr = new XMLHttpRequest();
@@ -150,6 +144,9 @@ function envoiformulaire(e) {
        window.latitude.textContent = data.latitude.toFixed(3);
        window.longitude.textContent = data.longitude.toFixed(3);
        window.wp.href = 'https://en.wikipedia.org/wiki/'+data.wp;
+       window.drapeau.src = "flags/"+data.wp+".png";
+
+       updateMap(data.wp, data.latitude.toFixed(3), data.longitude.toFixed(3));
      }
      // affichage d'un message d'erreur
      else {
