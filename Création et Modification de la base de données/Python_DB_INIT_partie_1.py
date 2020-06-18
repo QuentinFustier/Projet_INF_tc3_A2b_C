@@ -1,7 +1,6 @@
-# Il est important que les autres fichiers Python du type "Python_DB_INIT_partie_X.py"
-# se trouvent dans le même dossier que celui-ci, au même titre que le dossier
-# "europe" permettant d'extraire les données sur les pays européens. La base de
-# données sera alors créée dans ce même répertoire.
+# Il est important que le dossier compressé .zip "europe" permettant d'extraire
+# les données sur les pays européens soit situé dans le même répertoire que ce
+# programme Python. La base de données sera alors créée dans ce même répertoire.
 
 # Récupération de l'infobox d'un pays sur wikipédia
 def get_info(country):
@@ -48,7 +47,9 @@ def get_capital(wp_info):
         m_bis = re.search(r"City of (?P<city1>\D+)\|(?P<city2>\D+)",capital)
         if m_bis != None :
             if m_bis.group('city1') == m_bis.group('city2') :
-                capital = m_bis.group('city1')      
+                capital = m_bis.group('city1')
+        if capital == 'de jure' : # exception pour la Suisse
+            capital = 'Bern'
         return capital
     # Aveu d'échec, on ne doit jamais se retrouver ici
     print(' Could not fetch country capital {}'.format(wp_info))
@@ -150,17 +151,78 @@ import sqlite3
 # Ouverture d'une connexion avec la base de données
 conn = sqlite3.connect('pays.sqlite')
 
-# Pour initialiser la base de données, il est nécessaire d'éxécuter ce
-# programme dans un premier temps. Puis, en ouvrant la base de données depuis
-# l'application DB Browser (SQLite), une table 'countries' doit être créée de
-# la façon suivante :
-#    CREATE TABLE `countries` (             -- la table est nommé "countries"
-#    	`wp`	TEXT NOT NULL UNIQUE,       -- nom de la page wikipédia, non nul, unique
-#    	`name`	TEXT,                       -- nom complet du pays
-#    	`capital`	TEXT,                   -- nom de la capitale
-#    	`latitude`	REAL,                   -- latitude, champ numérique à valeur décimale
-#    	`longitude`	REAL,                   -- longitude, champ numérique à valeur décimale
-#    	PRIMARY KEY(`wp`)                   -- wp est la clé primaire
-#    );
-# Puis, et seulement ensuite, le programme "Python_DB_INIT_partie_2.py" doit
-# être éxécuté pour finaliser l'initialisation de la base de données.
+# Initialisation de la base de données
+c = conn.cursor()
+sql = "CREATE TABLE countries (wp TEXT NOT NULL UNIQUE, name TEXT, capital TEXT, latitude REAL, longitude REAL, PRIMARY KEY(wp));"
+c.execute(sql)
+conn.commit()
+
+
+def save_country(conn,country,info) :
+    # on remplace les "_" par des " "
+    wp = country.replace('_',' ')
+    m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+    if m != None :
+        wp = m.group('wp')
+    # préparation de la commande SQL
+    c = conn.cursor()
+    sql = 'INSERT INTO countries VALUES (?, ?, ?, ?, ?)'
+    # les infos à enregistrer
+    name = get_name(info)
+    capital = get_capital(info)
+    coords = get_coords(info)
+    # prendre en compte chaque cité-état
+    if capital == 'city-state' :
+        capital = wp
+    # soumission de la commande (noter que le second argument est un tuple)
+    c.execute(sql,(wp,name, capital, coords['lat'],coords['lon']))
+    conn.commit()
+
+# On essaie de lire un pays dans la base
+def read_country(conn,country):
+    # préparation de la commande SQL
+    c = conn.cursor()
+    sql = 'SELECT * FROM countries WHERE wp=?'
+    # récupération de l'information (ou pas)
+    c.execute(sql,(country,))
+    r = c.fetchone()
+    return r
+
+# Récupération depuis un fichier zip 
+from zipfile import ZipFile
+import json
+
+# Initialisation des informations dans la base de données
+def init_db(continent):
+    with ZipFile('{}.zip'.format(continent),'r') as z:
+        # liste des documents contenus dans le fichier zip
+        files = z.namelist()
+        for f in files:
+            country = f.split('.')[0]
+            # infobox de l'un des pays
+            info = json.loads(z.read(f))
+            save_country(conn,country,info)
+
+init_db('europe')
+
+# Ajout du champ 'continent'
+c = conn.cursor()
+sql = "ALTER TABLE countries ADD continent TEXT"
+c.execute(sql)
+conn.commit()
+
+# Mise à jour du continent d'un pays dans la base de données 
+def update_country_continent(conn,country,continent):
+    # préparation de la commande SQL
+    c = conn.cursor()
+    sql = 'UPDATE countries SET continent=? WHERE wp=?'
+    # soumission de la commande (noter que le second argument est un tuple)
+    c.execute(sql,(continent,country))
+    conn.commit()
+
+c = conn.cursor()
+sql = 'SELECT wp FROM countries'
+c.execute(sql)
+r = c.fetchall()
+for country in r :
+    update_country_continent(conn,country[0],'Europe')
