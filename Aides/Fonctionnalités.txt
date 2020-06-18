@@ -1,2 +1,3 @@
 - Rajouter les drapeaux
 - Faire bouger la carte et agrandir le marker quand on cherche un pays
+- Rajouter un calcul de distance entre deux capitales

@@ -2,7 +2,7 @@
 body {
   background-size: 100%;
   background-repeat: no-repeat;
-  color: white;
+  color: black;
   height: 90vh;
   /* pour éviter l'ascenseur */
   /*border: 1px solid transparent;*/
@@ -12,7 +12,7 @@ body {
   border: 1px solid #666;
   border-radius: 5px;
   box-shadow: 3px 3px 3px #444;
-  background: linear-gradient(0deg, #ffa50040, orange);
+  background: linear-gradient(0deg, rgba(34, 202, 232, 0.25), rgb(36, 128, 232));
 }
 
 /* bandeau de titre */
@@ -33,10 +33,8 @@ h2 {
   color: black;
   border: none;
   box-shadow: none;
-  margin-top: 1.33em;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
-  margin-bottom: 1.33em;
 }
 
 /* contenu de la page */
@@ -51,7 +49,7 @@ label {
   color: black;
   font-size: large;
 }
-label span { display: inline-block; width: 3em; height: 1.5em; }
+label span { display: inline-block; width: 5em; height: 1.5em; }
 .label {
   display: inline-block;
   width : 7em;
@@ -62,7 +60,7 @@ a.delete:hover {
 }
 #map {
   height: 85vh;
-  width: 70vw;
+  width: 65vw;
   margin-top: 20px;
   margin-right: 20px;
   border: 1px solid #666;
