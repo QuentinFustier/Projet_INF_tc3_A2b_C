@@ -1,9 +1,7 @@
 //connecter boutons aux fonctions onklick
 document.getElementById('boutonShow').addEventListener('click', clickBoutonShow);
 document.getElementById('boutonDist').addEventListener('click', clickBoutonDist);
-//cacher les sections qui affichent l'info des pays
-window.country_data.style.display = 'none';
-window.country_data2.style.display = 'none';
+
 // Création d'une carte dans la balise div "map",
 // et position de la vue sur un point donné et un niveau de zoom
 var map = L.map('map').setView([54,13], 4);
@@ -109,7 +107,7 @@ function callbackMode1() {
       }
       // affichage d'un message d'erreur
       else {
-        window.country_data.style.display = 'none';
+        //window.country_data.style.display = 'none';
         window.error_msg.innerHTML = this.statusText;
       }
 }
@@ -125,7 +123,7 @@ function callbackMode2() {
       }
       // affichage d'un message d'erreur
       else {
-        window.country_data.style.display = 'none';
+        //window.country_data.style.display = 'none';
         window.error_msg.innerHTML = this.statusText;
       }
 }
@@ -140,7 +138,7 @@ function callBackMode3() {
       }
       // affichage d'un message d'erreur
       else {
-        window.country_data.style.display = 'none';
+        //window.country_data.style.display = 'none';
         window.error_msg.innerHTML = this.statusText;
       }
 }
@@ -150,14 +148,14 @@ function callBackMode3() {
 function clickMarker (e) {
   selectCountry.value = e.target.name;
   envoiformulaire(1);
-  window.country_data2.style.display = 'none';
+  //window.country_data2.style.display = 'none';
 }
 
 //fonction onclick du bouton show
 function clickBoutonShow(e) {
   envoiformulaire(1);
   //cacher l'affichage du pays deux, au cas où elle est visible
-  window.country_data2.style.display = 'none';
+  //window.country_data2.style.display = 'none';
 }
 
 //fonction onlick du bouton distance
@@ -205,7 +203,8 @@ function getDistance(countryOne, countryTwo) {
       var data = JSON.parse(this.responseText);
       //window.error_msg.innerHTML = '';
       distance = data.distance_km.toFixed(0);
-      window.affichageDistance.textContent = distance+"km";
+      distance_miles = data.distance_miles.toFixed(0);
+      window.affichageDistance.textContent = distance+"km ("+distance_miles+"mi)";
     }
     // affichage d'un message d'erreur
     else {
@@ -253,22 +252,63 @@ function updateCountryInfo(data, country_num) {
   //mettre à jour les affichages d'infos du pays 1 ou 2
   if (country_num === 1) {
     window.country_data.style.display = 'block';
+    show_hide_country2('hide');
     window.country_name.textContent = data.name;
     window.continent.textContent = data.continent;
     window.capital.textContent = data.capital;
     window.latitude.textContent = data.latitude.toFixed(3);
     window.longitude.textContent = data.longitude.toFixed(3);
+    //window.population.textContent = data.population_estimate;
+    window.leader_title.textContent = data.leader_title;
+    window.leader_name.textContent = data.leader_name;
+    window.area.textContent = data.area_km2;
+    window.percent_water.textContent = data.percent_water;
+    //window.GPD_PPP.textContent = data.GDP_PPP_per_capita;
+    //window.currency.textContent = data.currency;
     window.wp.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau.src = "flags/" + data.wp + ".png";
   }
   else if (country_num === 2) {
-    window.country_data2.style.display = 'block';
+    show_hide_country2('show');
+    window.country_data.style.display = 'block';
     window.country_name2.textContent = data.name;
     window.continent2.textContent = data.continent;
     window.capital2.textContent = data.capital;
     window.latitude2.textContent = data.latitude.toFixed(3);
     window.longitude2.textContent = data.longitude.toFixed(3);
+    //window.population2.textContent = data.population_estimate;
+    window.leader_title2.textContent = data.leader_title;
+    window.leader_name2.textContent = data.leader_name;
+    window.area2.textContent = data.area_km2;
+    window.percent_water2.textContent = data.percent_water;
+    //window.GPD_PPP2.textContent = data.GDP_PPP_per_capita;
+    //window.currency2.textContent = data.currency;
     window.wp2.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau2.src = "flags/" + data.wp + ".png";
   }
+}
+
+
+function show_hide_country2(do_show_or_hide) {
+  var opt = '';
+  if (do_show_or_hide === 'hide'){
+    opt = 'none';
+  }
+  else if (do_show_or_hide === 'show'){
+    opt = 'block';
+  }
+  window.country_name2.style.display = opt;
+    window.continent2.style.display = opt;
+    window.capital2.style.display = opt;
+    window.latitude2.style.display = opt;
+    window.longitude2.style.display = opt;
+    window.population2.style.display = opt;
+    window.leader_title2.style.display = opt;
+    window.leader_name2.style.display = opt;
+    window.area2.style.display = opt;
+    window.percent_water2.style.display = opt;
+    window.GDP_PPP2.style.display = opt;
+    window.currency2.style.display = opt;
+    window.wp2.style.display = opt;
+    window.drapeau2.style.display = opt;
 }
