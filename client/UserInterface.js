@@ -1,15 +1,21 @@
+//connecter boutons aux fonctions onklick
 document.getElementById('boutonShow').addEventListener('click', clickBoutonShow);
 document.getElementById('boutonDist').addEventListener('click', clickBoutonDist);
+//cacher les sections qui affichent l'info des pays
 window.country_data.style.display = 'none';
+window.country_data2.style.display = 'none';
 // Création d'une carte dans la balise div "map",
 // et position de la vue sur un point donné et un niveau de zoom
 var map = L.map('map').setView([54,13], 4);
 
-// Ajout d'une couche de dalles OpenStreetMap
+// Ajoute d'une couche de dalles OpenStreetMap
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
      }).addTo(map);
+//rajouter l'échelle
+L.control.scale().addTo(map);
 
+//creer le icon vert et bleu
 var greenIcon = L.icon({
     iconUrl: 'images/marker-icon-green.png'
 });
@@ -17,14 +23,23 @@ var normalIcon = L.icon({
     iconUrl: 'images/marker-icon.png'
 });
 
+//variables pour gérer les icons des markers
 var marker_choisi = null;
+var marker_choisi2 = null;
 var markers = {};
+
+//les deux listes pour afficher tous les pays
 var selectCountry = document.getElementById("selectCountry");
 var selectCountry2 = document.getElementById("selectCountry2");
 
+//variables pour enregistrer la distance et les coordonnées lors d'une requete distance pour pouvoir adapter le positionnement et zoom de la carte
+var distance = 0;
+var lat1 = 0;
+var long1 = 0;
+
+
 // Fonction appelée au chargement de la page
 function load_data () {
-
   // objet pour l'envoi d'une requête Ajax
   var xhr = new XMLHttpRequest();
 
@@ -49,106 +64,211 @@ function load_data () {
 
 
 
-function updateMap(name, lat, long) {
-    //changer la couleur des markers, centrer la carte sur la capitale et faire un zoom
-  if(marker_choisi != null){
-      marker_choisi.setIcon(normalIcon)
-  }
-  marker_choisi = markers[name].setIcon(greenIcon);
-  marker_choisi.setIcon(greenIcon);
-  map.setView([lat,long], 6);
-}
-
-
-function envoiformulaire(e) {
+function envoiformulaire(mode) {
+  //mode 1: appui sur le bouton show ou un marker
+  //mode 2: appui sur le bouton distance
+  //mode 3: deuxième pour distance => on fait deux requetes, une pour le premier pays, la deuxième pour le deuxième
    var xhr = new XMLHttpRequest();
+   var ps = '';
 
    // on récupère le nom du pays
-   var ps = selectCountry.options[selectCountry.selectedIndex].text;
+  if (mode === 1 || mode === 2) {
+    ps = selectCountry.options[selectCountry.selectedIndex].text;
+  }
+  else if (mode === 3) {
+    ps = selectCountry2.options[selectCountry2.selectedIndex].text;
+  }
 
    // requête au serveur
-   xhr.open('GET','/service/country/'+ps,true);
+  xhr.open('GET','/service/country/'+ps,true);
 
-   // fonction callback
-   xhr.onload = function() {
+   // fonction callback onload ; dépendant du mode
+  if (mode === 1) {
+    xhr.onload = callbackMode1;
+  }
+  else if (mode === 2) {
+    xhr.onload = callbackMode2;
+  }
+  else if (mode === 3) {
+    xhr.onload = callBackMode3;
+  }
 
-     // récupération des informations au format json
-     if ( this.status == 200 ) {
-       var data = JSON.parse(this.responseText);
-       //window.error_msg.innerHTML = '';
-       window.country_data.style.display = 'block';
-       window.country_name.textContent = data.name;
-       window.continent.textContent = data.continent;
-       window.capital.textContent = data.capital;
-       window.latitude.textContent = data.latitude.toFixed(3);
-       window.longitude.textContent = data.longitude.toFixed(3);
-       window.wp.href = 'https://en.wikipedia.org/wiki/'+data.wp;
-       window.drapeau.src = "flags/"+data.wp+".png";
-
-       updateMap(data.wp, data.latitude.toFixed(3), data.longitude.toFixed(3));
-     }
-     // affichage d'un message d'erreur
-     else {
-        window.country_data.style.display = 'none';
-        window.error_msg.innerHTML = this.statusText;
-     }
-  };
   xhr.send();
 }
+
+
+//fonctions callback de la fonction envoieFormulaire
+function callbackMode1() {
+  // récupération des informations au format json
+      if (this.status === 200) {
+        var data = JSON.parse(this.responseText);
+        //window.error_msg.innerHTML = '';
+        window.affichageDistance.textContent = "";
+        updateCountryInfo(data, 1);
+        updateMap(data.wp, data.latitude.toFixed(3), data.longitude.toFixed(3), 1);
+      }
+      // affichage d'un message d'erreur
+      else {
+        window.country_data.style.display = 'none';
+        window.error_msg.innerHTML = this.statusText;
+      }
+}
+
+function callbackMode2() {
+      // récupération des informations au format json
+      if (this.status === 200) {
+        var data = JSON.parse(this.responseText);
+        //window.error_msg.innerHTML = '';
+        updateCountryInfo(data, 1);
+        updateMap(data.wp, data.latitude.toFixed(3), data.longitude.toFixed(3), 2);
+        envoiformulaire(3);
+      }
+      // affichage d'un message d'erreur
+      else {
+        window.country_data.style.display = 'none';
+        window.error_msg.innerHTML = this.statusText;
+      }
+}
+
+function callBackMode3() {
+      // récupération des informations au format json
+      if (this.status === 200) {
+        var data = JSON.parse(this.responseText);
+        //window.error_msg.innerHTML = '';
+        updateCountryInfo(data, 2);
+        updateMap(data.wp, data.latitude.toFixed(3), data.longitude.toFixed(3), 3);
+      }
+      // affichage d'un message d'erreur
+      else {
+        window.country_data.style.display = 'none';
+        window.error_msg.innerHTML = this.statusText;
+      }
+}
+
 
 // Fonction appelée lors d'un clic sur un marqueur
 function clickMarker (e) {
   selectCountry.value = e.target.name;
-  envoiformulaire(e);
+  envoiformulaire(1);
+  window.country_data2.style.display = 'none';
 }
 
-
+//fonction onclick du bouton show
 function clickBoutonShow(e) {
-  envoiformulaire(e);
+  envoiformulaire(1);
+  //cacher l'affichage du pays deux, au cas où elle est visible
+  window.country_data2.style.display = 'none';
 }
 
+//fonction onlick du bouton distance
 function clickBoutonDist(e) {
+  //fonction pour faire une requete de distance au serveur et afficher le resultat sur l'élement "affichageDistance"
   getDistance(selectCountry.options[selectCountry.selectedIndex].text, selectCountry2.options[selectCountry2.selectedIndex].text);
+  //envoiformulaire avec mode 2
+  envoiformulaire(2);
 }
 
 function fillSelects(name) {
-    var option1 = document.createElement("option");
-    var option2 = document.createElement("option");
-    option1.text = name; //le wp
-    option1.value = name;
-    option2.text = name; //le wp
-    option2.value = name;
-    selectCountry.add(option1);
-    selectCountry2.add(option2);
+  //fonction pour remplir les listes de pays au lancement du programme
+  var option1 = document.createElement("option");
+  var option2 = document.createElement("option");
+  option1.text = name; //le wp
+  option1.value = name;
+  option2.text = name; //le wp
+  option2.value = name;
+  selectCountry.add(option1);
+  selectCountry2.add(option2);
 }
 
 function addMarkers(data) {
+  //fonction pour rajouter les markers au lancement du programme
   var marker = L.marker([data.lat,data.lon],{title:data.name}).addTo(map);
       marker.addEventListener('click',clickMarker);
       marker.name = data.name;
-
+      //rajouter les markers à la liste markers pour les retrouver pour changer l'icon
       markers[data.name] = marker;
 }
 
+
 function getDistance(countryOne, countryTwo) {
-   var xhr = new XMLHttpRequest();
+  //fonction pour faire une requete de distance au serveur et afficher le resultat sur l'élement "affichageDistance"
+  var xhr = new XMLHttpRequest();
 
-   // requête au serveur
-   xhr.open('GET','/service/distance/'+countryOne+'/'+countryTwo,true);
+  // requête au serveur
+  xhr.open('GET','/service/distance/'+countryOne+'/'+countryTwo,true);
 
-   // fonction callback
-   xhr.onload = function() {
+  // fonction callback
+  xhr.onload = function() {
 
-     // récupération des informations au format json
-     if ( this.status == 200 ) {
-       var data = JSON.parse(this.responseText);
-       //window.error_msg.innerHTML = '';
-      window.affichageDistance.textContent = data.distance_km.toFixed(0)+"km";
-     }
-     // affichage d'un message d'erreur
-     else {
-        window.error_msg.innerHTML = this.statusText;
-     }
+    // récupération des informations au format json
+    if ( this.status === 200 ) {
+      var data = JSON.parse(this.responseText);
+      //window.error_msg.innerHTML = '';
+      distance = data.distance_km.toFixed(0);
+      window.affichageDistance.textContent = distance+"km";
+    }
+    // affichage d'un message d'erreur
+    else {
+      window.error_msg.innerHTML = this.statusText;
+    }
   };
   xhr.send();
+}
+
+function updateMap(name, lat, long, mode) {
+  //changer la couleur des markers, centrer la carte sur la capitale et faire un zoom
+  var zoom = 6;
+  if(mode === 3) {
+    //dans le mode 3, le marker du deuxième pays est mis en vert
+    //Aussi le zoom est calculé dynamiquement avec une fonction linéaire dépendant de la distance, et lat et long sont mis au milieu des deux pays
+    zoom = Math.round((-3/3943)*distance + 6.8);
+    if (zoom < 3){
+      zoom = 3;
+    }
+    lat = (parseFloat(lat) + parseFloat(lat1))/2;
+    long = (parseFloat(long) + parseFloat(long1))/2;
+    marker_choisi2 = markers[name];
+    marker_choisi2.setIcon(greenIcon);
+  }
+  else if (mode === 1 || mode === 2){
+    //mettre le marker du pays 1 en vert ; la seule différence entre le mode 1 et 2 est que dans le mode 2 la carte n'est pas centrée sur le premier pays
+    if(marker_choisi != null){
+      marker_choisi.setIcon(normalIcon);
+    }
+    if(marker_choisi2 != null){
+      marker_choisi2.setIcon(normalIcon);
+    }
+    marker_choisi = markers[name];
+    marker_choisi.setIcon(greenIcon);
+    lat1 = lat;
+    long1 = long;
+  }
+  if (mode === 1 || mode === 3)
+  {
+    map.setView([lat, long], zoom);
+  }
+}
+
+function updateCountryInfo(data, country_num) {
+  //mettre à jour les affichages d'infos du pays 1 ou 2
+  if (country_num === 1) {
+    window.country_data.style.display = 'block';
+    window.country_name.textContent = data.name;
+    window.continent.textContent = data.continent;
+    window.capital.textContent = data.capital;
+    window.latitude.textContent = data.latitude.toFixed(3);
+    window.longitude.textContent = data.longitude.toFixed(3);
+    window.wp.href = 'https://en.wikipedia.org/wiki/' + data.wp;
+    window.drapeau.src = "flags/" + data.wp + ".png";
+  }
+  else if (country_num === 2) {
+    window.country_data2.style.display = 'block';
+    window.country_name2.textContent = data.name;
+    window.continent2.textContent = data.continent;
+    window.capital2.textContent = data.capital;
+    window.latitude2.textContent = data.latitude.toFixed(3);
+    window.longitude2.textContent = data.longitude.toFixed(3);
+    window.wp2.href = 'https://en.wikipedia.org/wiki/' + data.wp;
+    window.drapeau2.src = "flags/" + data.wp + ".png";
+  }
 }

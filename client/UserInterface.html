@@ -11,46 +11,55 @@
 <!-- Récupération de la liste des lieux insolites au chargement de la page -->
 <body onload="load_data();">
 
-<!-- div pour l'affichage des boutons et des informations -->
+<!-- div pour l'affichage des listes des pays, boutons, et les infos + drapeaux des pays ; float:left fait que le div s'affiche à coté de la carte et pas au dessus -->
   <div style="float:left">
     <h1>The countries of Europe</h1>
     <div>
       <label><span>Country:</span>
-        <select name="parfum" id="selectCountry">
+        <select name="select1" id="selectCountry">
         </select>
         <button id="boutonShow">Show</button>
       </label>
       <label><span>Country 2:</span>
-        <select name="parfum" id="selectCountry2">
+        <select name="select2" id="selectCountry2">
         </select>
         <button id="boutonDist">Distance</button>
       </label>
-      <div><span>Distance between Capitals: </span><span class="value" id="affichageDistance"></span></div>
+      <div style="margin-top:1vh"><span>Distance between Capitals: </span><span class="value" id="affichageDistance" style="font-weight:bold"></span></div>
     </div>
-
-    <div id="country_data" style="max-width:25vw">
+    <!-- div pour l'affichage des infos et du drapeau du premier pays -->
+    <div id="country_data" style="width:15vw; float:left">
       <h2 id="country_name"></h2>
       <div>
-        <img id="drapeau" src="flags/Austria.png" alt="Flag of the country" style="height:10vh; width:10vw">
+        <img id="drapeau" src="flags/France.png" alt="Flag of the country" style="height:10vh; width:10vw">
       </div>
       <div><span class="label">Continent:</span><span class="value" id="continent"></span></div>
       <div><span class="label">Capital:</span><span class="value" id="capital"></span></div>
       <div><span class="label">Latitude:</span><span class="value" id="latitude"></span></div>
       <div><span class="label">Longitude:</span><span class="value" id="longitude"></span></div>
       <div><span class="label">Read more on:</span><a id="wp" href="">wikipedia</a></div>
+      <audio controls>
+        <source src="https://upload.wikimedia.org/wikipedia/commons/3/30/La_Marseillaise.ogg"/>
+      </audio>
+    </div>
+    <!-- div pour l'affichage des infos et du drapeau du deuxième pays -->
+    <div id="country_data2" style="width:15vw; float:right">
+      <h2 id="country_name2"></h2>
+      <div>
+        <img id="drapeau2" src="flags/France.png" alt="Flag of the country" style="height:10vh; width:10vw">
+      </div>
+      <div><span class="label">Continent:</span><span class="value" id="continent2"></span></div>
+      <div><span class="label">Capital:</span><span class="value" id="capital2"></span></div>
+      <div><span class="label">Latitude:</span><span class="value" id="latitude2"></span></div>
+      <div><span class="label">Longitude:</span><span class="value" id="longitude2"></span></div>
+      <div><span class="label">Read more on:</span><a id="wp2" href="">wikipedia</a></div>
     </div>
     <div id="error_msg"></div>
   </div>
 
-  <div style="float:right">
-
   <!-- Zone pour l'insertion de la carte OSM via Leaflet -->
-  <div id="map" style="margin-bottom:1.33em"></div>
+  <div id="map" style="margin-bottom:1.33em; float:right"></div>
 
-  <!-- Zone pour l'affichage dynamique des descriptions -->
-  <p id="description"></p>
-
-  </div>
 </body>
 
 <script src="UserInterface.js"></script>
