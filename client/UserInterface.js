@@ -266,10 +266,8 @@ function updateCountryInfo(data, country_num) {
     window.wp.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau.src = "flags/" + data.wp + ".png";
     //mettre à jour le audio
-    var audio = document.getElementById('hymne1');
-    //var audio_src = document.getElementById('hymne1_src');
     window.hymne1_src.src = data.anthem;
-    audio.load();
+    window.hymne1.load();
 
   }
   else if (country_num === 2) {
@@ -289,6 +287,11 @@ function updateCountryInfo(data, country_num) {
     //window.currency2.textContent = data.currency;
     window.wp2.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau2.src = "flags/" + data.wp + ".png";
+    //mettre à jour le audio
+    var audio = document.getElementById('hymne2');
+    //var audio_src = document.getElementById('hymne1_src');
+    window.hymne2_src.src = data.anthem;
+    audio.load();
   }
 }
 
@@ -315,4 +318,6 @@ function show_hide_country2(do_show_or_hide) {
     window.currency2.style.display = opt;
     window.wp2.style.display = opt;
     window.drapeau2.style.display = opt;
+    window.hymne2.style.display = opt;
+    window.hymne2.pause();
 }

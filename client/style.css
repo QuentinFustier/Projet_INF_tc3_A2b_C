@@ -49,10 +49,11 @@ label {
   color: black;
   font-size: large;
 }
-label span { display: inline-block; width: 5em; height: 1.5em; }
+label span { display: inline-block; width: 5em; height: 1.5em;}
 .label {
   display: inline-block;
   width : 7em;
+  font-weight: bold;
 }
 
 a.delete:hover {
