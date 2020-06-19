@@ -226,3 +226,141 @@ c.execute(sql)
 r = c.fetchall()
 for country in r :
     update_country_continent(conn,country[0],'Europe')
+    
+    
+  # Ajout du champ 'leader_title'
+c = conn.cursor()
+sql = "ALTER TABLE countries ADD leader_title TEXT"
+c.execute(sql)
+conn.commit()
+
+# Ajout du champ 'leader_name'
+c = conn.cursor()
+sql = "ALTER TABLE countries ADD leader_name TEXT"
+c.execute(sql)
+conn.commit()
+
+# Récupération du titre du dirigeant d'un pays
+def get_leader_title(wp_info):
+    if "leader_title1" in wp_info:
+        leader_title = wp_info['leader_title1']
+        m = re.match(".*?\[\[([\w\s',.()|-]+)\]\]", leader_title) 
+        if m != None :
+            leader_title = m.group(1)
+            m_bis = re.search(r"(?P<title1>\D+)\|(?P<title2>\D+)",leader_title)
+            if m_bis!= None :
+                leader_title = m_bis.group('title1')
+        return leader_title
+    # Aveu d'échec, on ne doit jamais se retrouver ici
+    return None
+    
+
+def leader_title_db(continent):
+    with ZipFile('{}.zip'.format(continent),'r') as z:
+        # liste des documents contenus dans le fichier zip
+        files = z.namelist()
+        for f in files:
+            country = f.split('.')[0]
+            # on remplace les "_" par des " "
+            wp = country.replace('_',' ')
+            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+            if m != None :
+                wp = m.group('wp')
+            # infobox de l'un des pays
+            info = json.loads(z.read(f))
+            save_leader_title(conn,wp,info)
+            
+def save_leader_title(conn,wp,info):
+    # préparation de la commande SQL
+    c = conn.cursor()
+    sql = 'UPDATE countries SET leader_title=? WHERE wp=?'
+    leader_title = get_leader_title(info)
+    # soumission de la commande (noter que le second argument est un tuple)
+    c.execute(sql,(leader_title,wp))
+    conn.commit()
+
+# ouverture d'une connexion avec la base de données
+conn = sqlite3.connect('pays.sqlite')
+
+# Ajout des titres des dirigeants dans la base de données
+leader_title_db('europe')
+
+
+
+# Récupération du nom du dirigeant d'un pays
+def get_leader_name(wp_info):
+    if "leader_name1" in wp_info:
+        leader_name = wp_info['leader_name1']
+        
+        # Cas général
+        m = re.match(".*?\[\[([\w\s',.()|-]+)\]\]", leader_name)
+        if m != None :
+            leader_name = m.group(1)
+        
+        # Pour la Belgique
+        m_bis = re.search(r"(?P<name1>\D+)\|(?P<name2>\D+)",leader_name)
+        if m_bis!= None :
+            leader_name = m_bis.group('name1')
+        
+        # Pour le Liechtenstein
+        m_ter = re.search(r"(?P<name1>\D+)\,(?P<name2>\D+)",leader_name)
+        if m_ter!= None :
+            leader_name = m_ter.group('name1')
+         
+        # Pour l'Angleterre     
+        m_qua = re.search(".*?\[\[(?P<name1>\D+)\&(?P<name2>\D+)\;(?P<name3>\D+)\]\]", leader_name)
+        if m_qua!= None :
+            leader_name = m_qua.group('name1')+m_qua.group('name3')
+            
+        # Pour la Suisse
+        m_qui = re.search(r"(?P<name2>\D)\[\[(?P<name1>\D+)\]\] \|(?P<name3>\D+)",leader_name)
+        if m_qui!= None :
+            leader_name = m_qui.group('name1')
+        m_qui2 = re.search(r"(?P<name1>\D+)\]\] \|(?P<name3>\D+)",leader_name)
+        if m_qui2!= None :
+            leader_name = m_qui2.group('name1')   
+            
+        # Pour la Slovénie 
+        m_six = re.search(r"\{\{(?P<name1>\D+)\}\}",leader_name)
+        if m_six!= None :
+            leader_name = wp_info['leader_name2']
+            m_six2 = re.match(".*?\[\[([\w\s',.()|-]+)\]\]", leader_name)
+            if m_six2 != None :
+                leader_name = m_six2.group(1)
+            
+        
+        return leader_name
+        
+    # Aveu d'échec, on ne doit jamais se retrouver ici
+    return None
+    
+
+def leader_name_db(continent):
+    with ZipFile('{}.zip'.format(continent),'r') as z:
+        # liste des documents contenus dans le fichier zip
+        files = z.namelist()
+        for f in files:
+            country = f.split('.')[0]
+            # on remplace les "_" par des " "
+            wp = country.replace('_',' ')
+            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+            if m != None :
+                wp = m.group('wp')
+            # infobox de l'un des pays
+            info = json.loads(z.read(f))
+            save_leader_name(conn,wp,info)
+            
+def save_leader_name(conn,wp,info):
+    # préparation de la commande SQL
+    c = conn.cursor()
+    sql = 'UPDATE countries SET leader_name=? WHERE wp=?'
+    leader_name = get_leader_name(info)
+    # soumission de la commande (noter que le second argument est un tuple)
+    c.execute(sql,(leader_name,wp))
+    conn.commit()
+
+# ouverture d'une connexion avec la base de données
+conn = sqlite3.connect('pays.sqlite')
+
+# Ajout des titres des dirigeants dans la base de données
+leader_name_db('europe')
