@@ -364,3 +364,120 @@ conn = sqlite3.connect('pays.sqlite')
 
 # Ajout des titres des dirigeants dans la base de données
 leader_name_db('europe')
+
+
+
+
+# Ajout du champ 'area_km2'
+c = conn.cursor()
+sql = "ALTER TABLE countries ADD area_km2 REAL"
+c.execute(sql)
+conn.commit()
+
+
+
+def get_area_km2(wp_info):
+    if "area_km2" in wp_info:
+        area_km2 = wp_info['area_km2']
+        area_km2 = area_km2.replace(',','')
+        #print(area_km2)
+        return area_km2
+    # Aveu d'échec, on ne doit jamais se retrouver ici
+    return None
+    
+
+def area_km2_db(continent):
+    with ZipFile('{}.zip'.format(continent),'r') as z:
+        # liste des documents contenus dans le fichier zip
+        files = z.namelist()
+        for f in files:
+            country = f.split('.')[0]
+            # on remplace les "_" par des " "
+            wp = country.replace('_',' ')
+            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+            if m != None :
+                wp = m.group('wp')
+            # infobox de l'un des pays
+            info = json.loads(z.read(f))
+            save_area_km2(conn,wp,info)
+            
+def save_area_km2(conn,wp,info):
+    # préparation de la commande SQL
+    c = conn.cursor()
+    sql = 'UPDATE countries SET area_km2=? WHERE wp=?'
+    area_km2 = get_area_km2(info)
+    # soumission de la commande (noter que le second argument est un tuple)
+    c.execute(sql,(area_km2,wp))
+    conn.commit()
+
+# ouverture d'une connexion avec la base de données
+conn = sqlite3.connect('pays.sqlite')
+
+# Ajout des titres des dirigeants dans la base de données
+area_km2_db('europe')
+
+
+
+# Ajout du champ 'percent_water'
+c = conn.cursor()
+sql = "ALTER TABLE countries ADD percent_water REAL"
+c.execute(sql)
+conn.commit()
+
+
+def get_percent_water(wp_info):
+    if "percent_water" in wp_info:
+        percent_water= wp_info['percent_water']
+        percent_water = percent_water.replace(' ','')
+        m_bis = re.search(r"(?P<name1>\d+)\.(?P<name3>\d+)(?P<name2>\D+)",percent_water)
+        #print(m_bis)
+        if m_bis!= None :
+            percent_water = m_bis.group('name1')+'.'+m_bis.group('name3')
+            #print(percent_water)
+        
+        percent_water = percent_water.replace('%','')
+        m = re.search(r"(?P<name1>\d+)\&(?P<name2>\D+)",percent_water)
+        if m!= None :
+            percent_water = m.group('name1')
+        
+        m3 = re.search(r"negligible",percent_water)
+        if m3!= None :
+            percent_water = '0.0'
+             
+        #print(percent_water)
+        return percent_water
+    # Aveu d'échec, on ne doit jamais se retrouver ici
+    return None
+    
+
+def percent_water_db(continent):
+    with ZipFile('{}.zip'.format(continent),'r') as z:
+        # liste des documents contenus dans le fichier zip
+        files = z.namelist()
+        for f in files:
+            country = f.split('.')[0]
+            # on remplace les "_" par des " "
+            wp = country.replace('_',' ')
+            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+            if m != None :
+                wp = m.group('wp')
+            # infobox de l'un des pays
+            info = json.loads(z.read(f))
+            save_percent_water(conn,wp,info)
+            
+def save_percent_water(conn,wp,info):
+    # préparation de la commande SQL
+    c = conn.cursor()
+    sql = 'UPDATE countries SET percent_water=? WHERE wp=?'
+    percent_water = get_percent_water(info)
+    # soumission de la commande (noter que le second argument est un tuple)
+    c.execute(sql,(percent_water,wp))
+    conn.commit()
+
+# ouverture d'une connexion avec la base de données
+conn = sqlite3.connect('pays.sqlite')
+
+# Ajout des titres des dirigeants dans la base de données
+percent_water_db('europe')
+
+
