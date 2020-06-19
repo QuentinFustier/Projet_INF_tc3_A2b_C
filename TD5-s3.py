@@ -256,7 +256,7 @@ conn = sqlite3.connect('pays.sqlite')
 conn.row_factory = sqlite3.Row
 
 # instanciation du serveur :
-httpd = socketserver.TCPServer(("", 8081), RequestHandler)
+httpd = socketserver.TCPServer(("", 8082), RequestHandler)
 # On utilise le numéro de port 8080
 
 # lancement du serveur : 
