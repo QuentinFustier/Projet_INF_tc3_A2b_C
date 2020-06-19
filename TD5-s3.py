@@ -121,6 +121,10 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         # on renvoie un dictionnaire au format JSON :
         else:
             data = {k:r[k] for k in r.keys()}
+            if data['GDP_PPP_per_capita']=='':
+                data['GDP_PPP_per_capita']='Unknown'
+            if data['percent_water']=='':
+                data['percent_water']='Unknown'
             json_data = json.dumps(data, indent=4)
             headers = [('Content-Type','application/json')]
             self.send(json_data,headers)
@@ -252,7 +256,7 @@ conn = sqlite3.connect('pays.sqlite')
 conn.row_factory = sqlite3.Row
 
 # instanciation du serveur :
-httpd = socketserver.TCPServer(("", 8080), RequestHandler)
+httpd = socketserver.TCPServer(("", 8081), RequestHandler)
 # On utilise le numéro de port 8080
 
 # lancement du serveur : 
