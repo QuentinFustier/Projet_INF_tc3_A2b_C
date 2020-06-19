@@ -107,7 +107,7 @@ function callbackMode1() {
       }
       // affichage d'un message d'erreur
       else {
-        //window.country_data.style.display = 'none';
+        window.country_data.style.display = 'none';
         window.error_msg.innerHTML = this.statusText;
       }
 }
@@ -123,7 +123,7 @@ function callbackMode2() {
       }
       // affichage d'un message d'erreur
       else {
-        //window.country_data.style.display = 'none';
+        window.country_data.style.display = 'none';
         window.error_msg.innerHTML = this.statusText;
       }
 }
@@ -138,7 +138,7 @@ function callBackMode3() {
       }
       // affichage d'un message d'erreur
       else {
-        //window.country_data.style.display = 'none';
+        window.country_data.style.display = 'none';
         window.error_msg.innerHTML = this.statusText;
       }
 }
@@ -148,14 +148,12 @@ function callBackMode3() {
 function clickMarker (e) {
   selectCountry.value = e.target.name;
   envoiformulaire(1);
-  //window.country_data2.style.display = 'none';
 }
 
 //fonction onclick du bouton show
 function clickBoutonShow(e) {
   envoiformulaire(1);
   //cacher l'affichage du pays deux, au cas où elle est visible
-  //window.country_data2.style.display = 'none';
 }
 
 //fonction onlick du bouton distance
@@ -267,6 +265,12 @@ function updateCountryInfo(data, country_num) {
     //window.currency.textContent = data.currency;
     window.wp.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau.src = "flags/" + data.wp + ".png";
+    //mettre à jour le audio
+    var audio = document.getElementById('hymne1');
+    //var audio_src = document.getElementById('hymne1_src');
+    window.hymne1_src.src = data.anthem;
+    audio.load();
+
   }
   else if (country_num === 2) {
     show_hide_country2('show');
