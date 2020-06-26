@@ -328,6 +328,12 @@ def get_leader_name(wp_info):
             if m_six2 != None :
                 leader_name = m_six2.group(1)
             
+        # Pour l'Allemagne
+        if wp_info['common_name']=="Germany":
+            leader_name = wp_info['leader_name2']
+            m = re.match(".*?\[\[([\w\s',.()|-]+)\]\]", leader_name)
+            if m != None :
+                leader_name = m.group(1)
         
         return leader_name
         
@@ -430,10 +436,10 @@ def get_percent_water(wp_info):
         percent_water= wp_info['percent_water']
         percent_water = percent_water.replace(' ','')
         m_bis = re.search(r"(?P<name1>\d+)\.(?P<name3>\d+)(?P<name2>\D+)",percent_water)
-        #print(m_bis)
+        
         if m_bis!= None :
             percent_water = m_bis.group('name1')+'.'+m_bis.group('name3')
-            #print(percent_water)
+            
         
         percent_water = percent_water.replace('%','')
         m = re.search(r"(?P<name1>\d+)\&(?P<name2>\D+)",percent_water)
@@ -444,7 +450,7 @@ def get_percent_water(wp_info):
         if m3!= None :
             percent_water = '0.0'
              
-        #print(percent_water)
+        
         return percent_water
     # Aveu d'échec, on ne doit jamais se retrouver ici
     return None
@@ -570,7 +576,6 @@ def get_GDP_PPP_per_capita(wp_info):
         if m_bis!= None :
             GDP_PPP_per_capita = m_bis.group('title2')
         
-        #print(GDP_PPP_per_capita)
         return GDP_PPP_per_capita
     
     elif "GDP_nominal_per_capita" in wp_info:
@@ -636,15 +641,16 @@ def get_population_estimate(wp_info):
         m_bis = re.search(r"(?P<title1>\D*)(?P<title2>\d+)",population_estimate)
         if m_bis!= None :
             population_estimate = m_bis.group('title2')
-            #print(population_estimate)
+            
             return population_estimate
+        
         elif "population_census" in wp_info :
             population_estimate = wp_info['population_census']
             population_estimate = population_estimate.replace(',','')
             m = re.search('(?P<title1>\D*)(?P<title2>\d+)(?P<title3>\D*)', population_estimate)
             if m!= None :
                 population_estimate = m.group('title2')
-                #print(population_estimate)
+        
                 return population_estimate
     
     
@@ -655,8 +661,9 @@ def get_population_estimate(wp_info):
         m = re.search('(?P<title1>\D*)(?P<title2>\d+)(?P<title3>\D*)', population_estimate)
         if m!= None :
             population_estimate = m.group('title2')
-        print(population_estimate)
+        
         return population_estimate
+    
     # Aveu d'échec, on ne doit jamais se retrouver ici
     return None
     
