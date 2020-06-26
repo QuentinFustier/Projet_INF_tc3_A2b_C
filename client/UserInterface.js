@@ -261,10 +261,11 @@ function updateCountryInfo(data, country_num) {
     window.leader_name.textContent = data.leader_name;
     window.area.textContent = data.area_km2;
     window.percent_water.textContent = data.percent_water;
-    //window.GPD_PPP.textContent = data.GDP_PPP_per_capita;
-    //window.currency.textContent = data.currency;
+    window.GPD_PPP.textContent = data.GDP_PPP_per_capita;
+    window.currency.textContent = data.currency;
     window.wp.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau.src = "flags/" + data.wp + ".png";
+    window.leader.src = "leaders/" + data.wp + ".jpg";
     //mettre à jour le audio
     window.hymne1_src.src = data.anthem;
     window.hymne1.load();
@@ -283,10 +284,11 @@ function updateCountryInfo(data, country_num) {
     window.leader_name2.textContent = data.leader_name;
     window.area2.textContent = data.area_km2;
     window.percent_water2.textContent = data.percent_water;
-    //window.GPD_PPP2.textContent = data.GDP_PPP_per_capita;
-    //window.currency2.textContent = data.currency;
+    window.GPD_PPP2.textContent = data.GDP_PPP_per_capita;
+    window.currency2.textContent = data.currency;
     window.wp2.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau2.src = "flags/" + data.wp + ".png";
+    window.leader2.src = "leaders/" + data.wp + ".jpg";
     //mettre à jour le audio
     var audio = document.getElementById('hymne2');
     //var audio_src = document.getElementById('hymne1_src');
@@ -319,5 +321,6 @@ function show_hide_country2(do_show_or_hide) {
     window.wp2.style.display = opt;
     window.drapeau2.style.display = opt;
     window.hymne2.style.display = opt;
+    window.leader2.style.display = opt;
     window.hymne2.pause();
 }

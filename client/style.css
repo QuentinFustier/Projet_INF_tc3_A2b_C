@@ -3,29 +3,30 @@ body {
   background-size: 100%;
   background-repeat: no-repeat;
   color: black;
-  height: 90vh;
+  height: 100vh;
   /* pour éviter l'ascenseur */
   /*border: 1px solid transparent;*/
-  box-sizing: border-box;
-  margin: 20px;
-  /*padding: 10px;*/
-  border: 1px solid #666;
+  /*box-sizing: border-box;*/
+  margin: 0;
+  padding: 0;
+  /*border: 1px solid #666;
   border-radius: 5px;
-  box-shadow: 3px 3px 3px #444;
+  box-shadow: 3px 3px 3px #444;*/
   background: linear-gradient(0deg, rgba(34, 202, 232, 0.25), rgb(36, 128, 232));
 }
 
 /* bandeau de titre */
 h1 { 
   color: black;
-  border: none;
-  box-shadow: none;
+  /*border: none;
+  box-shadow: none;*/
   background-color: rgba(255,255,255,0.3);
   border-top: 3px solid rgba(255,255,255,0.6);
   border-bottom: 3px solid rgba(255,255,255,0.6);
   /*text-shadow: 3px 3px 3px black;*/
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+  padding-left: 1vw;
   margin-bottom: 1.33em;
 }
 
@@ -37,8 +38,8 @@ h2 {
   padding-bottom: 0.5em;
 }
 
-/* contenu de la page */
-body > * {   padding-left: 10px; }
+/* contenu de la page
+body > * {   padding-left: 10px; }*/
 
 /* polices de caractères */
 body { font-family: Trebuchet MS, sans-serif; }
@@ -59,10 +60,73 @@ label span { display: inline-block; width: 5em; height: 1.5em;}
 a.delete:hover {
   color: red;
 }
+
+.infoContainer {
+  width:30vw;
+  float:left;
+}
+
+.infoLeft {
+  float:left;
+  width:14vw;
+}
+
+.infoRight {
+  float:left;
+  margin-left:1vw;
+  width:14vw;
+}
+
+.imageContainerFlag {
+  height:10vh;
+  width:8vw;
+  float:left;
+}
+
+.imageFlag {
+  max-height: 10vh;
+  max-width: 8vw;
+}
+
+.imageContainerLeader {
+  height:10vh;
+  width:4vw;
+  float:left;
+}
+
+.imageLeader {
+  max-height: 10vh;
+  max-width: 4vw;
+  border: 1px solid #000
+}
+
 #map {
-  height: 85vh;
+  height: 100vh;
   width: 65vw;
-  margin-top: 20px;
-  margin-right: 20px;
-  border: 1px solid #666;
+  margin-top: 0;
+  margin-right: 0;
+  border: 0.1vh solid;
+  border-color: rgba(255,255,255,0.3);
+}
+
+#leftSide {
+  float:left;
+  width:33.6vw
+}
+
+#country_data {
+  width:30vw;
+  float:left;
+  display:none;
+  padding-left:1vw;
+}
+
+#country_name {
+  width:14vw;
+  float:left;
+}
+
+#country_name2 {
+  width:15vw;
+  float:right;
 }
