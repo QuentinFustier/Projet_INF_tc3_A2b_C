@@ -217,10 +217,21 @@ function updateMap(name, lat, long, mode) {
   var zoom = 6;
   if(mode === 3) {
     //dans le mode 3, le marker du deuxième pays est mis en vert
-    //Aussi le zoom est calculé dynamiquement avec une fonction linéaire dépendant de la distance, et lat et long sont mis au milieu des deux pays
-    zoom = Math.round((-3/3943)*distance + 6.8);
-    if (zoom < 3){
-      zoom = 3;
+    //Aussi le zoom est determiné dépendant de la distance
+    if (distance < 100) {
+      zoom = 8;
+    }
+    else if (distance < 500) {
+      zoom = 7;
+    }
+    else if (distance < 1400) {
+      zoom = 6;
+    }
+    else if (distance < 2500) {
+      zoom = 5;
+    }
+    else {
+      zoom = 4;
     }
     lat = (parseFloat(lat) + parseFloat(lat1))/2;
     long = (parseFloat(long) + parseFloat(long1))/2;
@@ -261,11 +272,15 @@ function updateCountryInfo(data, country_num) {
     window.leader_name.textContent = data.leader_name;
     window.area.textContent = data.area_km2;
     window.percent_water.textContent = data.percent_water;
-    window.GPD_PPP.textContent = data.GDP_PPP_per_capita;
-    window.currency.textContent = data.currency;
+    //window.GPD_PPP.textContent = data.GDP_PPP_per_capita;
+    //window.currency.textContent = data.currency;
     window.wp.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau.src = "flags/" + data.wp + ".png";
-    window.leader.src = "leaders/" + data.wp + ".jpg";
+    var src = "leaders/" + data.wp + ".jpg";
+    if (data.wp == "Netherlands") {
+      src = "leaders/" + data.wp + ".jpeg";
+    }
+    window.leader.src = src;
     //mettre à jour le audio
     window.hymne1_src.src = data.anthem;
     window.hymne1.load();
@@ -284,8 +299,8 @@ function updateCountryInfo(data, country_num) {
     window.leader_name2.textContent = data.leader_name;
     window.area2.textContent = data.area_km2;
     window.percent_water2.textContent = data.percent_water;
-    window.GPD_PPP2.textContent = data.GDP_PPP_per_capita;
-    window.currency2.textContent = data.currency;
+    //window.GPD_PPP2.textContent = data.GDP_PPP_per_capita;
+    //window.currency2.textContent = data.currency;
     window.wp2.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau2.src = "flags/" + data.wp + ".png";
     window.leader2.src = "leaders/" + data.wp + ".jpg";
