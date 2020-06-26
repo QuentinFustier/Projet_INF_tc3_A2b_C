@@ -620,6 +620,82 @@ GDP_PPP_per_capita_db('europe')
 
 
 
+# Ajout du champ 'population_estimate'
+c = conn.cursor()
+sql = "ALTER TABLE countries ADD population_estimate INTEGER"
+c.execute(sql)
+conn.commit()
+
+def get_population_estimate(wp_info):
+    
+    
+    if "population_estimate" in wp_info:
+        population_estimate = wp_info['population_estimate']
+        population_estimate = population_estimate.replace(',','')
+        
+        m_bis = re.search(r"(?P<title1>\D*)(?P<title2>\d+)",population_estimate)
+        if m_bis!= None :
+            population_estimate = m_bis.group('title2')
+            #print(population_estimate)
+            return population_estimate
+        elif "population_census" in wp_info :
+            population_estimate = wp_info['population_census']
+            population_estimate = population_estimate.replace(',','')
+            m = re.search('(?P<title1>\D*)(?P<title2>\d+)(?P<title3>\D*)', population_estimate)
+            if m!= None :
+                population_estimate = m.group('title2')
+                #print(population_estimate)
+                return population_estimate
+    
+    
+    if "population_census" in wp_info:
+        population_estimate = wp_info['population_census']
+        population_estimate = population_estimate.replace(',','')
+    
+        m = re.search('(?P<title1>\D*)(?P<title2>\d+)(?P<title3>\D*)', population_estimate)
+        if m!= None :
+            population_estimate = m.group('title2')
+        print(population_estimate)
+        return population_estimate
+    # Aveu d'échec, on ne doit jamais se retrouver ici
+    return None
+    
+
+def population_estimate_db(continent):
+    with ZipFile('{}.zip'.format(continent),'r') as z:
+        # liste des documents contenus dans le fichier zip
+        files = z.namelist()
+        for f in files:
+            country = f.split('.')[0]
+            # on remplace les "_" par des " "
+            wp = country.replace('_',' ')
+            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+            if m != None :
+                wp = m.group('wp')
+            # infobox de l'un des pays
+            info = json.loads(z.read(f))
+            save_population_estimate(conn,wp,info)
+            
+def save_population_estimate(conn,wp,info):
+    # préparation de la commande SQL
+    c = conn.cursor()
+    sql = 'UPDATE countries SET population_estimate=? WHERE wp=?'
+    population_estimate = get_population_estimate(info)
+    # soumission de la commande (noter que le second argument est un tuple)
+    c.execute(sql,(population_estimate,wp))
+    conn.commit()
+
+# ouverture d'une connexion avec la base de données
+conn = sqlite3.connect('pays.sqlite')
+
+# Ajout des titres des dirigeants dans la base de données
+population_estimate_db('europe')
+
+
+
+
+
+
 dico_anthem = {
         "Albania":"https://upload.wikimedia.org/wikipedia/commons/5/52/Hymni_i_Flamurit_instrumental.ogg",
         "Andorra":"https://upload.wikimedia.org/wikipedia/commons/5/5b/El_Gran_Carlemany.ogg",
