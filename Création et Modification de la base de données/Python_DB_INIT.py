@@ -2,17 +2,6 @@
 # les données sur les pays européens soit situé dans le même répertoire que ce
 # programme Python. La base de données sera alors créée dans ce même répertoire.
 
-# Récupération de l'infobox d'un pays sur wikipédia
-def get_info(country):
-    # récupération de la page du pays passé en argument
-    # on peut ajouter silent=True pour éviter le message sur fond rose
-    page = wptools.page(country, silent=True)
-    # analyse du contenu de la page
-    # l'argument False sert à ne pas afficher de message sur fond rose
-    page.get_parse(False)
-    # On renvoie l'infobox
-    return page.data['infobox']
-
 # import du module permettant d'exploiter des expressions régulières
 import re
 
@@ -161,9 +150,9 @@ conn.commit()
 def save_country(conn,country,info) :
     # on remplace les "_" par des " "
     wp = country.replace('_',' ')
-    m = re.search(r"(?P<wp>\D+) \(country\)",wp)
-    if m != None :
-        wp = m.group('wp')
+#    m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+#    if m != None :
+#        wp = m.group('wp')
     # préparation de la commande SQL
     c = conn.cursor()
     sql = 'INSERT INTO countries VALUES (?, ?, ?, ?, ?)'
@@ -263,9 +252,9 @@ def leader_title_db(continent):
             country = f.split('.')[0]
             # on remplace les "_" par des " "
             wp = country.replace('_',' ')
-            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
-            if m != None :
-                wp = m.group('wp')
+#            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+#            if m != None :
+#                wp = m.group('wp')
             # infobox de l'un des pays
             info = json.loads(z.read(f))
             save_leader_title(conn,wp,info)
@@ -349,9 +338,9 @@ def leader_name_db(continent):
             country = f.split('.')[0]
             # on remplace les "_" par des " "
             wp = country.replace('_',' ')
-            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
-            if m != None :
-                wp = m.group('wp')
+#            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+#            if m != None :
+#                wp = m.group('wp')
             # infobox de l'un des pays
             info = json.loads(z.read(f))
             save_leader_name(conn,wp,info)
@@ -400,9 +389,9 @@ def area_km2_db(continent):
             country = f.split('.')[0]
             # on remplace les "_" par des " "
             wp = country.replace('_',' ')
-            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
-            if m != None :
-                wp = m.group('wp')
+#            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+#            if m != None :
+#                wp = m.group('wp')
             # infobox de l'un des pays
             info = json.loads(z.read(f))
             save_area_km2(conn,wp,info)
@@ -464,9 +453,9 @@ def percent_water_db(continent):
             country = f.split('.')[0]
             # on remplace les "_" par des " "
             wp = country.replace('_',' ')
-            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
-            if m != None :
-                wp = m.group('wp')
+#            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+#            if m != None :
+#                wp = m.group('wp')
             # infobox de l'un des pays
             info = json.loads(z.read(f))
             save_percent_water(conn,wp,info)
@@ -534,9 +523,9 @@ def currency_db(continent):
             country = f.split('.')[0]
             # on remplace les "_" par des " "
             wp = country.replace('_',' ')
-            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
-            if m != None :
-                wp = m.group('wp')
+#            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+#            if m != None :
+#                wp = m.group('wp')
             # infobox de l'un des pays
             info = json.loads(z.read(f))
             save_currency(conn,wp,info)
@@ -601,9 +590,9 @@ def GDP_PPP_per_capita_db(continent):
             country = f.split('.')[0]
             # on remplace les "_" par des " "
             wp = country.replace('_',' ')
-            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
-            if m != None :
-                wp = m.group('wp')
+#            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+#            if m != None :
+#                wp = m.group('wp')
             # infobox de l'un des pays
             info = json.loads(z.read(f))
             save_GDP_PPP_per_capita(conn,wp,info)
@@ -676,9 +665,9 @@ def population_estimate_db(continent):
             country = f.split('.')[0]
             # on remplace les "_" par des " "
             wp = country.replace('_',' ')
-            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
-            if m != None :
-                wp = m.group('wp')
+#            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+#            if m != None :
+#                wp = m.group('wp')
             # infobox de l'un des pays
             info = json.loads(z.read(f))
             save_population_estimate(conn,wp,info)
@@ -720,7 +709,7 @@ dico_anthem = {
         "Estonia":"https://upload.wikimedia.org/wikipedia/commons/5/52/US_Navy_band_-_National_anthem_of_Estonia.ogg",
         "Finland":"https://upload.wikimedia.org/wikipedia/commons/6/61/United_States_Navy_Band_-_Maamme.ogg",
         "France":"https://upload.wikimedia.org/wikipedia/commons/3/30/La_Marseillaise.ogg",
-        "Georgia":"https://upload.wikimedia.org/wikipedia/commons/b/b6/Georgian_national_anthem.oga",
+        "Georgia (country)":"https://upload.wikimedia.org/wikipedia/commons/b/b6/Georgian_national_anthem.oga",
         "Germany":"https://upload.wikimedia.org/wikipedia/commons/a/a6/German_national_anthem_performed_by_the_US_Navy_Band.ogg",
         "Greece":"https://upload.wikimedia.org/wikipedia/commons/d/db/Hymn_to_liberty_instrumental.oga",
         "Hungary":"https://upload.wikimedia.org/wikipedia/commons/7/79/Hungarian_national_anthem%2C_performed_by_the_United_States_Navy_Band_%281997_arrangement%29.mp3",

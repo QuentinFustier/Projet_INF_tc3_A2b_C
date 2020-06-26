@@ -132,8 +132,8 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 data['GDP_PPP_per_capita']='Unknown'            
             if data['percent_water']=='None %':
                 data['percent_water']='Unknown'
-            if data['wp'] == 'Georgia':
-                data['wp']='Georgia (country)'
+#            if data['wp'] == 'Georgia':
+#                data['wp']='Georgia (country)'
             json_data = json.dumps(data, indent=4)
             headers = [('Content-Type','application/json')]
             self.send(json_data,headers)
