@@ -2,19 +2,19 @@
 
 <script src="leaflet.js"> // Bibliothèque Leaflet : http://leafletjs.com/ </script>
 
-<title>Exemple de carte glissante</title>
+<title>The countries of Europe</title>
 <link rel="stylesheet" type="text/css" href="leaflet.css" />
 <link rel="stylesheet" type="text/css" href="style.css"/>
 
 <meta charset="utf-8">
 
 <!-- Récupération de la liste des lieux insolites au chargement de la page -->
-<body onload="load_data();">
+<body onload="load_data()">
 
 <!-- div pour l'affichage des listes des pays, boutons, et les infos + drapeaux des pays ; float:left fait que le div s'affiche à coté de la carte et pas au dessus -->
-  <div style="float:left">
+  <div id="leftSide">
     <h1>The countries of Europe</h1>
-    <div>
+    <div style="padding-left:1vw">
       <label><span>Country:</span>
         <select name="select1" id="selectCountry">
         </select>
@@ -29,62 +29,73 @@
     </div>
     <!-- div pour l'affichage des infos et du drapeau du premier pays -->
 
-    <div id="country_data" style="width:30vw; float:left; display:none">
-      <h2 id="country_name" style="width:14vw; float:left;"></h2>
-      <h2 id="country_name2" style="width:15vw; float:right"></h2>
-      <div style="width:30vw; float:left">
-        <img id="drapeau" src="flags/France.png" alt="Flag of the country" style="height:10vh; width:10vw; float:left">
-        <img id="drapeau2" src="flags/France.png" alt="Flag of the country" style="height:10vh; width:10vw; float:left; margin-left:5vw">
+    <div id="country_data">
+      <h2 id="country_name"></h2>
+      <h2 id="country_name2"></h2>
+      <div class="infoContainer">
+        <div class="imageContainerFlag">
+          <img id="drapeau" src="flags/France.png" alt="Flag of the country" class="imageFlag">
+        </div>
+        <div class="imageContainerLeader">
+          <img id="leader" src="leaders/France.jpg" alt="Flag of the country" class="imageLeader" style="margin-left:1vw">
+        </div>
+        <div class="imageContainerFlag">
+          <img id="drapeau2" src="flags/France.png" alt="Leader of the country" class="imageFlag" style="margin-left:3vw">
+        </div>
+        <div class="imageContainerLeader">
+          <img id="leader2" src="leaders/France.jpg" alt="Leader of the country" class="imageLeader" style="margin-left:4vw">
+        </div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Continent:</span><span class="value" id="continent"></span></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><span class="value" id="continent2"></span></div>
+
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Continent:</span><span class="value" id="continent"></span></div>
+        <div class="infoRight"><span class="value" id="continent2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Capital:</span><span class="value" id="capital"></span></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><span class="value" id="capital2"></span></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Capital:</span><span class="value" id="capital"></span></div>
+        <div class="infoRight"><span class="value" id="capital2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Latitude:</span><span class="value" id="latitude"></span></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><span class="value" id="latitude2"></span></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Latitude:</span><span class="value" id="latitude"></span></div>
+        <div class="infoRight"><span class="value" id="latitude2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Longitude:</span><span class="value" id="longitude"></span></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><span class="value" id="longitude2"></span></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Longitude:</span><span class="value" id="longitude"></span></div>
+        <div class="infoRight"><span class="value" id="longitude2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Population:</span><span class="value" id="population"></span></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><span class="value" id="population2"></span></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Population:</span><span class="value" id="population"></span></div>
+        <div class="infoRight"><span class="value" id="population2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Leader title:</span><span class="value" id="leader_title"></span></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><span class="value" id="leader_title2"></span></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Leader title:</span><span class="value" id="leader_title"></span></div>
+        <div class="infoRight"><span class="value" id="leader_title2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Leader name:</span><span class="value" id="leader_name"></span></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><span class="value" id="leader_name2"></span></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Leader name:</span><span class="value" id="leader_name"></span></div>
+        <div class="infoRight"><span class="value" id="leader_name2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Area:</span><span class="value" id="area"></span></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><span class="value" id="area2"></span></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Area:</span><span class="value" id="area"></span></div>
+        <div class="infoRight"><span class="value" id="area2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Water surface:</span><span class="value" id="percent_water"></span></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><span class="value" id="percent_water2"></span></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Water:</span><span class="value" id="percent_water"></span></div>
+        <div class="infoRight"><span class="value" id="percent_water2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">GDP/capita:</span><span class="value" id="GDP_PPP"></span></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><span class="value" id="GDP_PPP2"></span></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">GDP/capita:</span><span class="value" id="GDP_PPP"></span></div>
+        <div class="infoRight"><span class="value" id="GDP_PPP2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Currency:</span><span class="value" id="currency"></span></div>
-        <div style="float:left; width:14vw; margin-left:1vw"><span class="value" id="currency2"></span></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Currency:</span><span class="value" id="currency"></span></div>
+        <div class="infoRight"><span class="value" id="currency2"></span></div>
       </div>
-      <div style="width:30vw; float:left">
-        <div style="float:left; width:14vw"><span class="label">Read more on:</span><a id="wp" href="" target="_blank">wikipedia</a></div>
-        <div style="float:left; margin-left:1vw; width:14vw"><a id="wp2" href="" target="_blank2">wikipedia</a></div>
+      <div class="infoContainer">
+        <div class="infoLeft"><span class="label">Read more on:</span><a id="wp" href="" target="_blank">wikipedia</a></div>
+        <div class="infoRight"><a id="wp2" href="" target="_blank2">wikipedia</a></div>
       </div>
-      <div style="float:left; width:30vw">
+      <div class="infoContainer">
         <audio id="hymne1" style="width: 13vw; margin-top: 1vh; float:left" controls>
           <source id="hymne1_src" src=""/>
         </audio>

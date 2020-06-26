@@ -125,9 +125,12 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         # on renvoie un dictionnaire au format JSON :
         else:
             data = {k:r[k] for k in r.keys()}
-#            if data['GDP_PPP_per_capita']=='':
-#                data['GDP_PPP_per_capita']='Unknown'
-            if data['percent_water']=='':
+            data['percent_water'] = str(data['percent_water']) + ' %'
+#            data['GDP_PPP_per_capita'] = '$' + str(data['GDP_PPP_per_capita'])
+            data['area_km2'] = str(data['area_km2']) + ' km2'
+#            if data['GDP_PPP_per_capita']=='$None':
+#                data['GDP_PPP_per_capita']='Unknown'            
+            if data['percent_water']=='None %':
                 data['percent_water']='Unknown'
             if data['wp'] == 'Georgia':
                 data['wp']='Georgia (country)'

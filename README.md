@@ -13,6 +13,6 @@ Ce projet correspond à un développement réalisé dans le cadre de l'enseignem
 Le projet a débuté le vendredi 5 juin 2020.  
 Le *groupe C* traitait le **continent européen**.  
 Les consignes données pour la réalisation de ce projet ont été adaptées aux conditions particulières du premier semestre 2020.
-Ces consignes sont disponibles dans la documentation au sein du fichier Presentation_de_l_activite_S6.pdf.
+Ces consignes sont disponibles dans la documentation au sein du fichier : Presentation_de_l_activite_S6.pdf
 
 Tous droits réservés.
