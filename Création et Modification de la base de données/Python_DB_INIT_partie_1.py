@@ -480,6 +480,146 @@ conn = sqlite3.connect('pays.sqlite')
 # Ajout du pourcentage d'eau dans la base de données
 percent_water_db('europe')
 
+
+
+
+
+
+# Ajout du champ 'currency'
+c = conn.cursor()
+sql = "ALTER TABLE countries ADD currency TEXT"
+c.execute(sql)
+conn.commit()
+
+def get_currency(wp_info):
+    if "currency" in wp_info:
+        currency = wp_info['currency']
+        
+        m = re.match(".*?\[\[([\w\s',.()|-]+)\]\]", currency)
+        if m != None :
+            currency = m.group(1)
+        m_bis = re.search(r"(?P<title1>\D+)\|(?P<title2>\D+)",currency)
+        if m_bis!= None :
+            currency = m_bis.group('title1')
+        
+        m2 = re.search(r"(?P<name1>\D+)\[\[(?P<name2>\D+)\]\](?P<name3>\D+)",currency)
+        if m2!= None :
+            currency = m2.group('name2')
+        
+        m3 = re.search(r"(?P<name1>\D+)\((?P<name2>\D+)",currency)
+        if m3!= None :
+            currency = m3.group('name1')
+        
+        m4 = re.search(r"(?P<name1>\D+)\;(?P<name2>\D+)\]\]",currency)
+        if m4!= None :
+            currency = m4.group('name2')
+        
+        
+        return currency
+    # Aveu d'échec, on ne doit jamais se retrouver ici
+    return None
+    
+
+def currency_db(continent):
+    with ZipFile('{}.zip'.format(continent),'r') as z:
+        # liste des documents contenus dans le fichier zip
+        files = z.namelist()
+        for f in files:
+            country = f.split('.')[0]
+            # on remplace les "_" par des " "
+            wp = country.replace('_',' ')
+            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+            if m != None :
+                wp = m.group('wp')
+            # infobox de l'un des pays
+            info = json.loads(z.read(f))
+            save_currency(conn,wp,info)
+            
+def save_currency(conn,wp,info):
+    # préparation de la commande SQL
+    c = conn.cursor()
+    sql = 'UPDATE countries SET currency=? WHERE wp=?'
+    currency = get_currency(info)
+    # soumission de la commande (noter que le second argument est un tuple)
+    c.execute(sql,(currency,wp))
+    conn.commit()
+
+# ouverture d'une connexion avec la base de données
+conn = sqlite3.connect('pays.sqlite')
+
+# Ajout des titres des dirigeants dans la base de données
+currency_db('europe')
+
+
+
+
+
+# Ajout du champ 'GDP_PPP_per_capita'
+c = conn.cursor()
+sql = "ALTER TABLE countries ADD GDP_PPP_per_capita REAL"
+c.execute(sql)
+conn.commit()
+
+def get_GDP_PPP_per_capita(wp_info):
+    if "GDP_PPP_per_capita" in wp_info:
+        GDP_PPP_per_capita = wp_info['GDP_PPP_per_capita']
+        
+        GDP_PPP_per_capita = GDP_PPP_per_capita.replace(',','')
+        
+        m_bis = re.search(r"(?P<title1>\D*)\$(?P<title2>\d+)(?P<title3>\D*)",GDP_PPP_per_capita)
+        if m_bis!= None :
+            GDP_PPP_per_capita = m_bis.group('title2')
+        
+        #print(GDP_PPP_per_capita)
+        return GDP_PPP_per_capita
+    
+    elif "GDP_nominal_per_capita" in wp_info:
+        GDP_PPP_per_capita = wp_info['GDP_nominal_per_capita']
+        
+        GDP_PPP_per_capita = GDP_PPP_per_capita.replace(',','')
+        
+        m_bis = re.search(r"(?P<title1>\D*)\$(?P<title2>\d+)(?P<title3>\D*)",GDP_PPP_per_capita)
+        if m_bis!= None :
+            GDP_PPP_per_capita = m_bis.group('title2')
+        
+        #print(GDP_PPP_per_capita)
+        return GDP_PPP_per_capita
+    # Aveu d'échec, on ne doit jamais se retrouver ici
+    return None
+    
+
+def GDP_PPP_per_capita_db(continent):
+    with ZipFile('{}.zip'.format(continent),'r') as z:
+        # liste des documents contenus dans le fichier zip
+        files = z.namelist()
+        for f in files:
+            country = f.split('.')[0]
+            # on remplace les "_" par des " "
+            wp = country.replace('_',' ')
+            m = re.search(r"(?P<wp>\D+) \(country\)",wp)
+            if m != None :
+                wp = m.group('wp')
+            # infobox de l'un des pays
+            info = json.loads(z.read(f))
+            save_GDP_PPP_per_capita(conn,wp,info)
+            
+def save_GDP_PPP_per_capita(conn,wp,info):
+    # préparation de la commande SQL
+    c = conn.cursor()
+    sql = 'UPDATE countries SET GDP_PPP_per_capita=? WHERE wp=?'
+    GDP_PPP_per_capita = get_GDP_PPP_per_capita(info)
+    # soumission de la commande (noter que le second argument est un tuple)
+    c.execute(sql,(GDP_PPP_per_capita,wp))
+    conn.commit()
+
+# ouverture d'une connexion avec la base de données
+conn = sqlite3.connect('pays.sqlite')
+
+# Ajout des titres des dirigeants dans la base de données
+GDP_PPP_per_capita_db('europe')
+
+
+
 dico_anthem = {
         "Albania":"https://upload.wikimedia.org/wikipedia/commons/5/52/Hymni_i_Flamurit_instrumental.ogg",
         "Andorra":"https://upload.wikimedia.org/wikipedia/commons/5/5b/El_Gran_Carlemany.ogg",
