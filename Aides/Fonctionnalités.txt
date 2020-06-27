@@ -2,5 +2,5 @@
 - Faire bouger la carte et agrandir le marker quand on cherche un pays : OK
 - Rajouter un calcul de distance entre deux capitales : OK
 - Rajouter les hymnes : OK
-- Rajouter la photo des dirigeants
-- Lister l'ensemble des informations présentes dans la base de données : il reste population_estimate / GDP_PPP_per_capita / currency
+- Rajouter la photo des dirigeants : OK
+- Lister l'ensemble des informations présentes dans la base de données : OK
