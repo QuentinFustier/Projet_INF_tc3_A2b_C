@@ -239,6 +239,17 @@ def get_leader_title(wp_info):
             m_bis = re.search(r"(?P<title1>\D+)\|(?P<title2>\D+)",leader_title)
             if m_bis!= None :
                 leader_title = m_bis.group('title1')
+        
+        # Cas particulier : Germany
+        if "Germany" in leader_title :
+            leader_title = wp_info['leader_title2']
+            m = re.match(".*?\[\[([\w\s',.()|-]+)\]\]", leader_title) 
+            if m != None :
+                leader_title = m.group(1)
+                m_bis = re.search(r"(?P<title1>\D+)\|(?P<title2>\D+)",leader_title)
+                if m_bis!= None :
+                    leader_title = m_bis.group('title1')
+            leader_title = leader_title.split('(')[0].strip(' ')
         return leader_title
     # Aveu d'échec, on ne doit jamais se retrouver ici
     return None
