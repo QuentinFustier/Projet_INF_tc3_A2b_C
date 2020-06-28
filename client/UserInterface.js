@@ -224,7 +224,7 @@ function updateMap(name, lat, long, mode) {
     else if (distance < 500) {
       zoom = 7;
     }
-    else if (distance < 1400) {
+    else if (distance < 1200) {
       zoom = 6;
     }
     else if (distance < 2500) {
@@ -267,19 +267,16 @@ function updateCountryInfo(data, country_num) {
     window.capital.textContent = data.capital;
     window.latitude.textContent = data.latitude.toFixed(3);
     window.longitude.textContent = data.longitude.toFixed(3);
-    //window.population.textContent = data.population_estimate;
+    window.population.textContent = data.population_estimate;
     window.leader_title.textContent = data.leader_title;
     window.leader_name.textContent = data.leader_name;
     window.area.textContent = data.area_km2;
     window.percent_water.textContent = data.percent_water;
     //window.GPD_PPP.textContent = data.GDP_PPP_per_capita;
-    //window.currency.textContent = data.currency;
+    window.currency.textContent = data.currency;
     window.wp.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau.src = "flags/" + data.wp + ".png";
     var src = "leaders/" + data.wp + ".jpg";
-    if (data.wp == "Netherlands") {
-      src = "leaders/" + data.wp + ".jpeg";
-    }
     window.leader.src = src;
     //mettre à jour le audio
     window.hymne1_src.src = data.anthem;
