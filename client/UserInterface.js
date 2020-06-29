@@ -276,8 +276,7 @@ function updateCountryInfo(data, country_num) {
     window.currency.textContent = data.currency;
     window.wp.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau.src = "flags/" + data.wp + ".png";
-    var src = "leaders/" + data.wp + ".jpg";
-    window.leader.src = src;
+    window.leader.src = "leaders/" + data.wp + ".jpg";
     //mettre à jour le audio
     window.hymne1_src.src = data.anthem;
     window.hymne1.load();
@@ -291,21 +290,19 @@ function updateCountryInfo(data, country_num) {
     window.capital2.textContent = data.capital;
     window.latitude2.textContent = data.latitude.toFixed(3);
     window.longitude2.textContent = data.longitude.toFixed(3);
-    //window.population2.textContent = data.population_estimate;
+    window.population2.textContent = data.population_estimate;
     window.leader_title2.textContent = data.leader_title;
     window.leader_name2.textContent = data.leader_name;
     window.area2.textContent = data.area_km2;
     window.percent_water2.textContent = data.percent_water;
     //window.GPD_PPP2.textContent = data.GDP_PPP_per_capita;
-    //window.currency2.textContent = data.currency;
+    window.currency2.textContent = data.currency;
     window.wp2.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau2.src = "flags/" + data.wp + ".png";
     window.leader2.src = "leaders/" + data.wp + ".jpg";
     //mettre à jour le audio
-    var audio = document.getElementById('hymne2');
-    //var audio_src = document.getElementById('hymne1_src');
     window.hymne2_src.src = data.anthem;
-    audio.load();
+    window.hymne2.load();
   }
 }
 
@@ -328,7 +325,7 @@ function show_hide_country2(do_show_or_hide) {
     window.leader_name2.style.display = opt;
     window.area2.style.display = opt;
     window.percent_water2.style.display = opt;
-    window.GDP_PPP2.style.display = opt;
+    //window.GDP_PPP2.style.display = opt;
     window.currency2.style.display = opt;
     window.wp2.style.display = opt;
     window.drapeau2.style.display = opt;
