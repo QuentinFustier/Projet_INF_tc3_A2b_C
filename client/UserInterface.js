@@ -272,7 +272,7 @@ function updateCountryInfo(data, country_num) {
     window.leader_name.textContent = data.leader_name;
     window.area.textContent = data.area_km2;
     window.percent_water.textContent = data.percent_water;
-    //window.GPD_PPP.textContent = data.GDP_PPP_per_capita;
+    window.gdpppp.textContent = data.GDP_PPP_per_capita;
     window.currency.textContent = data.currency;
     window.wp.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau.src = "flags/" + data.wp + ".png";
@@ -295,7 +295,7 @@ function updateCountryInfo(data, country_num) {
     window.leader_name2.textContent = data.leader_name;
     window.area2.textContent = data.area_km2;
     window.percent_water2.textContent = data.percent_water;
-    //window.GPD_PPP2.textContent = data.GDP_PPP_per_capita;
+    window.gdpppp2.textContent = data.GDP_PPP_per_capita;
     window.currency2.textContent = data.currency;
     window.wp2.href = 'https://en.wikipedia.org/wiki/' + data.wp;
     window.drapeau2.src = "flags/" + data.wp + ".png";
@@ -325,7 +325,7 @@ function show_hide_country2(do_show_or_hide) {
     window.leader_name2.style.display = opt;
     window.area2.style.display = opt;
     window.percent_water2.style.display = opt;
-    //window.GDP_PPP2.style.display = opt;
+    window.gdpppp2.style.display = opt;
     window.currency2.style.display = opt;
     window.wp2.style.display = opt;
     window.drapeau2.style.display = opt;
