@@ -1,6 +1,6 @@
 //connecter boutons aux fonctions onklick
 document.getElementById('boutonShow').addEventListener('click', clickBoutonShow);
-document.getElementById('boutonDist').addEventListener('click', clickBoutonDist);
+document.getElementById('boutonComp').addEventListener('click', clickBoutonCompare);
 
 // Création d'une carte dans la balise div "map",
 // et position de la vue sur un point donné et un niveau de zoom
@@ -157,7 +157,7 @@ function clickBoutonShow(e) {
 }
 
 //fonction onlick du bouton distance
-function clickBoutonDist(e) {
+function clickBoutonCompare(e) {
   //fonction pour faire une requete de distance au serveur et afficher le resultat sur l'élement "affichageDistance"
   getDistance(selectCountry.options[selectCountry.selectedIndex].text, selectCountry2.options[selectCountry2.selectedIndex].text);
   //envoiformulaire avec mode 2
