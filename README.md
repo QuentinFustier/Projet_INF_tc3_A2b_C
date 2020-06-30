@@ -27,5 +27,6 @@ Parmi eux, on trouve :
 * [Tests initiaux](https://github.com/QuentinFustier/Projet_INF_tc3_A2b_C/tree/master/Tests%20initiaux) : Quelques tests réalisés en particulier au début du projet pour effectuer une première prise en main de *Git* et *Github*.
 * [Versions antérieures du Serveur](https://github.com/QuentinFustier/Projet_INF_tc3_A2b_C/tree/master/Versions%20ant%C3%A9rieures%20du%20serveur) : Ce répertoire classe les anciennes versions du serveur, ce dernier ayant été développé tout au long des modifications de la base de données et des fichiers *HTML*.
 * [client](https://github.com/QuentinFustier/Projet_INF_tc3_A2b_C/tree/master/client) : Le répertoire nécessaire à l'application. Il contient à la fois les images des drapeaux, les images des points d'intérêt, les photos des dirigeants, les feuilles de style *CSS* ainsi que les fichiers *HTML* et *Javascript*.
+* [Screencast](https://github.com/QuentinFustier/Projet_INF_tc3_A2b_C/tree/master/Screencast) : Contient la vidéo *screencast* détaillant le projet et démontrant les fonctionnalités de l'application développée.
 
 Tous droits réservés.
